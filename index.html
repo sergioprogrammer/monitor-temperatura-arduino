@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="vieport" content="width=device-width, initial-scale=1">
+	<title></title>
+  <style type="text/css">
+  </style>
+	<link rel="stylesheet" href="bulma.css">
+    <link rel="stylesheet" href="bulma.css.map">
+    <link rel="shortcut icon" href="favicon.png" />
+    <style>
+        body{
+            background: rgb(238,174,202);
+            background: linear-gradient(128deg, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+            }
+            
+
+    </style>
+	<script type="text/javascript">
+              /* Actualizacion desde BD
+		window.onload = function () {
+                var dataLength = 0;
+                var data = [];
+                var updateInterval = 500;
+                updateChart();
+                function updateChart() {
+                    $.getJSON("data2.php", function (result) {
+                        if (dataLength !== result.length) {
+                            for (var i = dataLength; i < result.length; i++) {
+                                data.push({
+                                    x: parseInt(result[i].valorx),
+                                    y: parseInt(result[i].valory)
+                                });
+                            }
+                            dataLength = result.length;
+                            chart.render();
+                        }
+                    });
+                }
+
+                var chart = new CanvasJS.Chart("chart", {
+                  zoomEnabled: true,
+                	mantainAspectRatio: false,
+                    title: {
+                        text: "Temperatura Vs. Tiempo",
+                        
+                    },
+                    axisX: {
+                        title: "Tiempo (X)",
+                      labelFormatter: function (e) {
+                      return CanvasJS.formatNumber(e.value, "##:##");
+
+                    },
+                      labelAngle:-90,
+                      lineColor: "#369EAD",
+                      titleFontColor: "#369EAD",
+                      labelFontColor: "#369EAD"
+                    },
+                    axisY: [{
+                      title: "Temperatura (Y)",
+                      lineColor: "#369EAD",
+                      titleFontColor: "#369EAD",
+                      labelFontColor: "#369EAD"
+
+                    }],
+                    data: [{type: "area",
+                            color: "#369EAD", dataPoints: data}],
+                }); 
+                chart.render();
+               setInterval(function(){
+                updateChart()
+               }, updateInterval);
+            }*/
+
+            window.onload = function () {
+            var dataPoints = [];
+            var chart = new CanvasJS.Chart("chart", {
+                title : {
+                  text : "Temperatura Vs. Tiempo"
+                },
+                axisX: {
+                        title: "Tiempo (X)",
+                      labelFormatter: function (e) {
+                      return CanvasJS.formatNumber(e.value, "##:##");
+                      },
+                      labelAngle:-90,
+                      lineColor: "#369EAD",
+                      titleFontColor: "#369EAD",
+                      labelFontColor: "#369EAD"
+                    },
+                    axisY: [{
+                      title: "Temperatura (Y)",
+                      lineColor: "#369EAD",
+                      titleFontColor: "#369EAD",
+                      labelFontColor: "#369EAD"
+
+                    }],
+                data : [{
+                    type : "area",
+                    color: "#369EAD", dataPoints: dataPoints
+                  }
+                ]
+              });
+
+            chart.render();
+            
+            var yVal = 0, xVar = 1400;
+            var updateChart = function () {
+            
+              yVal =  Math.round(Math.random() * (18 - 20)+ 20);
+              xVar =  xVar+1;     
+              
+              dataPoints.push({
+                y : yVal,
+                x : xVar
+              });
+                  
+              chart.render();    
+              
+            };
+
+            // update chart every second
+            setInterval(function(){updateChart()}, 1000);
+          }	
+	     
+	</script>
+	        <script type="text/javascript" src="assets/script/canvasjs.min.js"></script>
+        <script type="text/javascript" src="assets/script/jquery-2.2.3.min.js"></script>
+        <script type="text/javascript" src="assets/script/jquery.canvasjs.min"></script>
+</head>
+<body>
+  <section class="section">
+    <div class="container">
+      <h1 class="title">
+        Monitoreo de equipos de refrigeración
+      </h1>
+      <p class="subtitle">
+        Los datos obtenidos se muestran en el <strong>Grafico</strong>!
+      </p>
+    </div>
+  </section>
+<div class="container">
+  <div class="notification">
+  <center>
+    Data obtained by <strong>Arduino</strong>.
+    <br>
+    <br>
+   	<div id="chart" style="width: 753px; height: 452px; border: 1px solid #000000;"></div>
+    </center>
+    <br>
+    <br>
+    <br>
+    <br>
+    <strong> <center>ELABORACIÓN DEL PROYECTO: PAGINA WEB</center></strong>
+    <br>
+    <p id="parrafo" align="justify">El proyecto se realizo con base a los conocimientos obtenidos durante el semestre, se hizo uso del arduino para la recolección de datos mediante sensores los cuales mas tarde enviarian esa señal desde un modulo WIFI a una base de datos. Esos datos se visualizan en esta <strong>pagina Web</strong> en la grafica de arriba. El siguiente codigo viene siendo el archivo <strong>data2.php</strong>.</p>
+    <br>
+    <center><img src="creacionbd.png" style="border: 1px solid #000000;"></center>
+    <br>
+    <p id="parrafo" align="justify">Con el cual nos conectamos a la base de datos, el extrae los datos a graficar de una tabla creada dentro de la base de datos, la tabla es la siguiente.</p>
+    <br>
+    <center><img src="creacionbd2.png" style="border: 1px solid #000000;"></center>
+    <br>
+    <p id="parrafo" align="justify">La tabla <strong>X:Y</strong> maneja dos tipos de datos, X utiliza <strong>float</strong> ya que es el tipo de dato en el que envia el arduino la temperatura y Y utiliza CURRENT_TIMESTAMP, es una variable de tipo <strong>datetime</strong>. La función de este value es agregar a la tabla como valor, el tiempo actual, de la siguiente manera; AA-MM-DD hh:mm:ss.</p>
+    <br>
+    <p id="parrafo" align="justify">Por ultimo tenemos el codigo para la graficación, utilizamos un Chart llamado <strong>CanvasJs</strong> este, puede realizar graficas de todo tipo y cuenta una amplia personalización. Ahora, el codigo se encuentra en un script dentro del archivo <strong>index.html</strong>, es el siguiente.</p>
+    <br>
+    <center><img src="tabla1.png" style="border: 1px solid #000000;"></center>
+    <br>
+    <p id="parrafo" align="justify">Con eso ya tenemos los datos listos para graficas, ahora debemos visualizarla por lo que creamos el chart. Lo hacemos de la siguiente manera:</p>
+    <br>
+    <center><img src="tabla2.png" style="border: 1px solid #000000;"></center>
+    <br>
+    <p id="parrafo" align="justify">Como herramienta extra pero de mucha importancia, le dimos vida a la grafica de tal forma que, ella se actualizara sola cada vez que reciba un dato en la base de datos, esto con la funcion <strong>updateChart()</strong> asi no habra necesidad de actualizar el navegador cada vez que se envie un dato. Con eso culmina nuestro proyecto y pasamos a observar los datos de la grafica que se encuentra el inicio de la pagina.</p>
+  </div>
+</div>
+<br>
+<br>
+<footer class="footer" style="">
+  <div class="container">
+    <div class="content has-text-centered">
+      <p>
+        <strong>PROJECT</strong> Sergio Durán. Universidad de la Costa, 
+        <a href="https://www.cuc.edu.co/">CUC</a>.
+      </p>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
